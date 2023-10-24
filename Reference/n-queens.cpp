@@ -163,8 +163,8 @@ int main(){
 
 	cout<<"Position of Queen's: "<<"\n";
 	for(int i=0; i<n; i++){
-		cout<<i<<"  ";
-		cout<<result[i]<<"\n";
+		cout<<i+1<<"  ";
+		cout<<result[i]+1<<"\n";
 	}
 	
 	return 0;
