@@ -43,7 +43,7 @@ Graph* Graph::createGraph(int V, int E)
 	return graph;
 }
 
-void BellmanFord(Graph* graph , int src)
+void Graph::BellmanFord(Graph* graph , int src)
 {
 	int V = graph->Vertices;
 	int E = graph->Edges;
@@ -63,7 +63,7 @@ void BellmanFord(Graph* graph , int src)
 			int wt = graph->edge[j].weight;
 			if((distance[u] != 999) && (distance[u] + wt < distance[v]))
 			{
-				dist[v] = dist[u] + wt;
+				distance[v] = distance[u] + wt;
 			}	
 		}
 	}  	
