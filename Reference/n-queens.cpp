@@ -1,171 +1,83 @@
-#include<bits/stdc++.h>
+#include <iostream>
+
 using namespace std;
 
-int arr[10][10];
-int result[10];
+bool isSafe(int board[10][10], int row, int col, int N) {
+    int i, j;
 
-void backTrack(int,int,int);
+    // Check this row on the left side
+    for (i = 0; i < col; i++) {
+        if (board[row][i])
+            return false;
+    }
 
-void back(int r,int n,int count){
-	
-	int pr=r-1;
-	int cr=result[pr];
-	
-	arr[pr][cr]=0;
-	result[pr]=-1;
-	
-	if(pr==0 && cr==n-1){
-		cr=0;
-	}
-	else{
-		cr++;
-	}
+    // Check upper diagonal on the left side
+    for (i = row, j = col; i >= 0 && j >= 0; i--, j--) {
+        if (board[i][j])
+            return false;
+    }
 
-	int flag=0;
-	while(cr<n){
-		
-		for(int i=0; i<n; i++){
-			
-			if(result[i]==-1){
-				flag=0;
-				break;
-			}
-			
-			else if(result[i]==cr){
-			   flag=1;
-			   break;
-		    }
-		
-		    else if( abs(i-pr)==abs(result[i]-cr) ){
-			    flag=1;
-			    break;
-		    }
-				
-		}
-		if(flag==1){
-			cr++;
-		}
-		else{
-			break;
-		}
-	}
-		
-	if(cr<n){
-		
-		//count=count+1;
-		arr[pr][cr]=count;
-		result[pr]=cr;
-		
-		backTrack(pr,n,count);
-	}
-	else{
-		count--;
-		back(pr,n,count);
-	}
-	
+    // Check lower diagonal on the left side
+    for (i = row, j = col; j >= 0 && i < N; i++, j--) {
+        if (board[i][j])
+            return false;
+    }
+
+    return true;
 }
 
-void backTrack(int r,int n,int count){
+bool solveNQUtil(int board[10][10], int col, int N) {
+    // base case: If all queens are placed then return true
+    if (col >= N)
+        return true;
 
-	int r2=r+1;
-	int c2=0;
-	int flag=0;
-	
-	while(c2<n){
-		
-		for(int i=0; i<n; i++){
-			
-			if(result[i]==-1){
-				flag=0;
-				break;
-			}
-			
-			else if(result[i]==c2){
-			   flag=1;
-			   break;
-		    }
-		
-		    else if( abs(i-r2)==abs(result[i]-c2) ){
-			    flag=1;
-			    break;
-		    }
-				
-		}
-		if(flag==1){
-			c2++;
-		}
-		else{
-			break;
-		}
-	}
-	
-	//cout<<c2<<endl;
-	
-	if(c2>=n){
-		
-		back(r2,n,count);
-	}
-	else{
-		
-		count=count+1;
-		arr[r2][c2]=count;
-	    result[r2]=c2;
-	    
-		if(count < n){
-			backTrack(r2,n,count);
-		}
-	    
-	}
-	
+    // Consider this column and try placing this queen in all rows one by one
+    for (int i = 0; i < N; i++) {
+        // Check if the queen can be placed on board[i][col]
+        if (isSafe(board, i, col, N)) {
+            // Place this queen in board[i][col]
+            board[i][col] = 1;
+
+            // recur to place the rest of the queens
+            if (solveNQUtil(board, col + 1, N))
+                return true;
+
+            // If placing queen in board[i][col] doesn't lead to a solution, then remove queen from board[i][col]
+            board[i][col] = 0; // BACKTRACK
+        }
+    }
+
+    // If the queen cannot be placed in any row in this column col then return false
+    return false;
 }
 
-int main(){
+bool solveNQ(int N) {
+    int board[10][10] = {0};
 
-	int r,c;
-	int n;
-	
-	
-	cout<<"Enter Number of Queens"<<endl;
-	cin>>n;
-	
-	//cout<<"Enter Position of first Queen"<<endl;
-	//cin>>r>>c;
-	r=0;
-	c=0;
-	for(int i=0; i<n; i++){
-		
-		for(int j=0; j<n; j++){
-			
-			arr[i][j]= 0;
-			
-		}
-		result[i]=-1;
-	
-	}
-	int count=1;
-	
-	arr[r][c]=count;
-	result[r]=c;
+    if (solveNQUtil(board, 0, N) == false) {
+        cout << "Solution does not exist";
+        return false;
+    }
 
-	backTrack(r,n,count);
+    // Print the solution
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            cout << board[i][j] << " ";
+        }
+        cout << endl;
+    }
 
-    cout<<"\n\n";
-	for(int i=0; i<n; i++){
-		
-		for(int j=0; j<n; j++){
-			
-			cout<<arr[i][j]<<"\t";
-		}
-		cout<<"\n\n";
-	}
-	
-	cout<<"\n";
+    return true;
+}
 
-	cout<<"Position of Queen's: "<<"\n";
-	for(int i=0; i<n; i++){
-		cout<<i+1<<"  ";
-		cout<<result[i]+1<<"\n";
-	}
-	
-	return 0;
+int main() {
+    int N;
+    cout << "Enter the size of the chessboard (N): ";
+    cin >> N;
+
+    if (!solveNQ(N)) {
+        cout << "Solution does not exist for N = " << N << endl;
+    }
+
+    return 0;
 }
