@@ -1,5 +1,6 @@
 #include<iostream>
 using namespace std;
+#define INFINITY 999
 
 void printArr(int dist[], int n)
 {
@@ -45,42 +46,42 @@ Graph* Graph::createGraph(int V, int E)
 
 void Graph::BellmanFord(Graph* graph , int src)
 {
-	int V = graph->Vertices;
-	int E = graph->Edges;
-	int distance[V];
+	//int V = graph->Vertices;
+	//int E = graph->Edges;
+	int distance[graph->Vertices];
 	
-	for(int i = 0 ; i <  V ; i++)
-		distance[i] = 999;
+	for(int i = 0 ; i <  graph->Vertices ; i++)
+		distance[i] = INFINITY;
 	
-	distance[src-1] = 0;
+	distance[src] = 0;
 	
-	for(int i = 0 ; i < V ; i++)
+	for(int i = 0 ; i < graph->Vertices ; i++)
 	{
-		for(int j = 0 ; j < E ; j++)
+		for(int j = 0 ; j < graph->Edges ; j++)
 		{
 			int u = graph->edge[j].src;
 			int v = graph->edge[j].dest;
 			int wt = graph->edge[j].weight;
-			if((distance[u] != 999) && (distance[u] + wt < distance[v]))
+			if((distance[u] != INFINITY) && (distance[u] + wt < distance[v]))
 			{
 				distance[v] = distance[u] + wt;
 			}	
 		}
 	}  	
 	
-	for(int j = 0 ; j < E ; j++)
+	for(int j = 0 ; j < graph->Edges ; j++)
 	{
 		int u = graph->edge[j].src;
 		int v = graph->edge[j].dest;
 		int wt = graph->edge[j].weight;
-		if((distance[u] != 999) && (distance[u] + wt < distance[v]))
+		if((distance[u] != INFINITY) && (distance[u] + wt < distance[v]))
 		{
 			printf("\n This Graph cannot be solved by \"BELLMAN-FORD Algorithnm!!\"\n");
 			return;
 		}	
 	}
 	
-	printArr(distance , V);
+	printArr(distance , graph->Vertices);
 	
 	return;
 }
@@ -96,6 +97,6 @@ int main()
 	Graph G;
 	Graph* inputGraph = G.createGraph(V , E);
 	
-	G.BellmanFord(inputGraph , 1);
+	G.BellmanFord(inputGraph , 0);
 	return 0;
 }
