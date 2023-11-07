@@ -122,7 +122,7 @@ void operations::knapsack_dynamic()
 
     float matrix[size+1][capacity + 1];
 
-     int dp[size + 1][capacity + 1];
+    int dp[size + 1][capacity + 1];
 
     for (int i = 0; i <= size; ++i) {
         for (int w = 0; w <= capacity; ++w) {
